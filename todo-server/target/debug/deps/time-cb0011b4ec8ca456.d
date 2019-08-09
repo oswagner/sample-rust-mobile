@@ -1,0 +1,11 @@
+/Users/julianaomiboeira/Documents/sample-rust-mobile/todo-server/target/debug/deps/time-cb0011b4ec8ca456.rmeta: /Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/lib.rs /Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/display.rs /Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/duration.rs /Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/parse.rs /Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/sys.rs
+
+/Users/julianaomiboeira/Documents/sample-rust-mobile/todo-server/target/debug/deps/libtime-cb0011b4ec8ca456.rlib: /Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/lib.rs /Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/display.rs /Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/duration.rs /Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/parse.rs /Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/sys.rs
+
+/Users/julianaomiboeira/Documents/sample-rust-mobile/todo-server/target/debug/deps/time-cb0011b4ec8ca456.d: /Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/lib.rs /Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/display.rs /Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/duration.rs /Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/parse.rs /Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/sys.rs
+
+/Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/lib.rs:
+/Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/display.rs:
+/Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/duration.rs:
+/Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/parse.rs:
+/Users/julianaomiboeira/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.42/src/sys.rs:

@@ -9,4 +9,4 @@ edition = "2018"
 [dependencies]
 cdrs = "*"
 cdrs_helpers_derive = "*"
-uuid = "*"
+uuid = { version = "0.7", features = ["serde", "v4"] }

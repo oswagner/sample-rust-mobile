@@ -1,5 +1,8 @@
 extern crate cdrs;
 extern crate cdrs_helpers_derive;
+extern crate serde_derive;
+extern crate serde_json;
+extern crate serde;
 extern crate uuid;
 
 use cdrs::authenticators::{NoneAuthenticator};
@@ -16,15 +19,12 @@ use uuid::Uuid;
 pub type CurrentSession = Session<RoundRobin<TcpConnectionPool<NoneAuthenticator>>>;
 
 pub fn create_session() -> CurrentSession {
-  //   let user = "user";
-  //   let password = "password";
-  //   let auth = StaticPasswordAuthenticator::new(&user, &password);
   let node = NodeTcpConfigBuilder::new("127.0.0.1:9042", NoneAuthenticator {}).build();
   let cluster_config = ClusterTcpConfig(vec![node]);
   new_session(&cluster_config, RoundRobin::new()).expect("session should be created")
 }
 
-#[derive(Clone, Debug, IntoCDRSValue, TryFromRow, PartialEq)]
+#[derive(Clone, Debug, Serialize, Deserialize, IntoCDRSValue, TryFromRow, PartialEq)]
 pub struct Person {
   id: Uuid,
   person: String,
@@ -36,7 +36,7 @@ impl Person {
   }
 }
 
-pub fn select_struct(session: &CurrentSession) {
+pub fn select_person(session: &CurrentSession) -> Vec<String> {
   let select_struct_cql = "SELECT * FROM todo.person";
   let rows = session
     .query(select_struct_cql)
@@ -46,15 +46,32 @@ pub fn select_struct(session: &CurrentSession) {
     .into_rows()
     .expect("into rows");
 
-  for row in rows {
-    let my_row: Person = Person::try_from_row(row).expect("into RowStruct");
-    println!("struct got: {:?}", my_row);
-  }
+  rows.into_iter()
+      .map(|r| Person::try_from_row(r).expect("into Person"))
+      .map(|r| serde_json::to_string(&&r).unwrap())
+      .collect::<Vec<String>>()
 }
 
-pub fn insert_struct(session: &CurrentSession) {
+pub fn select_person_id(session: &CurrentSession, id: String) -> String {
+  let select_struct_cql = "SELECT * FROM todo.person WHERE id = ?";
+  let row = Person {person: String::new(), id: Uuid::parse_str(&id[..]).unwrap()};
+  let persons = session
+    .query_with_values(select_struct_cql, row.into_query_values())
+    .expect("select failed")
+    .get_body()
+    .expect("Body extract Failed")
+    .into_rows()
+    .expect("into rows");
+
+  persons.into_iter()
+      .map(|r| Person::try_from_row(r).expect("into Person"))
+      .map(|r| serde_json::to_string(&&r).unwrap())
+      .collect::<String>()
+}
+
+pub fn insert_person(session: &CurrentSession, name: &str) {
   let row = Person {
-    person: String::from("Rosita"),
+    person: String::from(name),
     id: Uuid::new_v4()
   };
 

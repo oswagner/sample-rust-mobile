@@ -10,3 +10,8 @@ edition = "2018"
 cdrs = "*"
 cdrs_helpers_derive = "*"
 uuid = { version = "0.7", features = ["serde", "v4"] }
+serde = "*"
+serde_json = "*"
+serde_derive = "*"
+actix-web = "*"
+futures = "*"

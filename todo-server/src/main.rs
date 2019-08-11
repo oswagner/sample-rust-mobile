@@ -9,9 +9,17 @@ extern crate futures;
 
 mod cql;
 
-use cql::{select_person, select_person_id, create_session};
-use actix_web::{web, App, HttpResponse, HttpServer, Error};
+use cql::{select_person, select_person_id, insert_person, create_session};
+use actix_web::{web, Result, App, HttpResponse, HttpServer, Error};
+use actix_web::middleware::Logger;
+use env_logger;
 use futures::future::{ok, Future};
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+struct Info {
+    name: String,
+}
 
 fn select_all() -> Box<dyn Future<Item = HttpResponse, Error = Error>> {
     let no_compression = create_session();
@@ -27,13 +35,30 @@ fn select_id(info: web::Path<(String)>) -> Box<dyn Future<Item = HttpResponse, E
     ))
 }
 
+fn add_person(info: web::Json<Info>) -> Result<String> {
+    let no_compression = create_session();
+    let id = insert_person(&no_compression, format!("{}",info.name));
+    Ok(id)
+}
+
 #[rustfmt::skip]
 pub fn main() {
+  std::env::set_var("RUST_LOG", "actix_web=info");
+  env_logger::init();
+
   HttpServer::new(|| {
-        App::new().service(
+        App::new()
+          .wrap(Logger::new("IP:%a DATETIME:%t REQUEST:\"%r\" STATUS: %s DURATION:%D \n"))
+          .service(
             web::scope("/person")
               .route("/select/{id}", web::get().to(select_id))
-              .route("/all", web::get().to_async(select_all)))
+              .route("/add", web::post().to(add_person))
+              .route("/all", web::get().to_async(select_all))
+              .route("",web::get().to(|| HttpResponse::MethodNotAllowed())))
+          .service(
+             web::scope("/")
+             .route("",web::get().to(|| HttpResponse::MethodNotAllowed()))
+          )
     })
     .workers(6)
     .bind("127.0.0.1:4000")

@@ -69,10 +69,11 @@ pub fn select_person_id(session: &CurrentSession, id: String) -> String {
       .collect::<String>()
 }
 
-pub fn insert_person(session: &CurrentSession, name: &str) {
+pub fn insert_person(session: &CurrentSession, name: String) -> String {
+  let id = Uuid::new_v4();
   let row = Person {
-    person: String::from(name),
-    id: Uuid::new_v4()
+    person: name,
+    id: id.clone()
   };
 
   let insert_struct_cql = "INSERT INTO todo.person \
@@ -80,4 +81,5 @@ pub fn insert_person(session: &CurrentSession, name: &str) {
   session
     .query_with_values(insert_struct_cql, row.into_query_values())
     .expect("insert");
+  id.to_string()
 }

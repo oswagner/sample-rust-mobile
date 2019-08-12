@@ -21,3 +21,8 @@ CREATE INDEX IF NOT EXISTS state_idx ON todo.feature (state);
 
 CREATE INDEX IF NOT EXISTS name_idx ON todo.person (person);
 
+
+INSERT INTO person (id, person) VALUES(uuid(), 'Wagner');
+INSERT INTO person (id, person) VALUES(uuid(), 'Julia');
+
+INSERT INTO feature (id, title, state) VALUES(uuid(), 'Fazer CQL funcionar', 0);

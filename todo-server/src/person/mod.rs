@@ -65,3 +65,52 @@ pub fn insert_person(session: &CurrentSession, name: String) -> String {
     .expect("insert");
   id.to_string()
 }
+
+#[cfg(test)]
+mod test_person {
+  use super::*;
+  use regex::Regex;
+  use crate::cqlutils::{create_session};
+
+  #[test]
+  fn select_all_two_persons() {
+    let persons = select_person(&create_session());
+    let re = Regex::new(r"(Wagner|Julia|Testando)").unwrap();
+
+    assert!(re.is_match(&persons[0]));
+    assert!(persons.len() >= 2);
+  }
+  
+  #[test]
+  fn select_person_by_id() {
+    let session = create_session();
+    let persons = select_person(&session);
+    let person = serde_json::from_str::<Person>(&persons[0]).unwrap();
+
+    let retrieved_person_select = select_person_id(&session, person.id.to_string());
+    let retrieved_person = serde_json::from_str::<Person>(&retrieved_person_select).unwrap();
+
+    assert_eq!(person, retrieved_person);
+  }
+
+  #[test]
+  fn select_person_with_wrong_id() {
+    let session = create_session();
+
+    let retrieved_person = select_person_id(&session, String::from("c5c1ba87-3a03-4f26-995a-77479f2aeba6"));
+
+    assert_eq!(retrieved_person, "");
+  }
+
+  #[test]
+  fn insert_person_is_mapped() {
+    let session = create_session();
+    let retrieved_person_id = insert_person(&session, String::from("Testando"));  
+
+    let persons = select_person(&session);
+    let person = serde_json::from_str::<Person>(persons.last().unwrap()).unwrap();
+
+    assert_eq!(person.id.to_string(), retrieved_person_id);
+    assert!(persons.len() >= 3);
+  }
+}

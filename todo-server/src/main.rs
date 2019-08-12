@@ -2,20 +2,22 @@
 #[macro_use] extern crate cdrs_helpers_derive;
 #[macro_use] extern crate serde_derive;
 extern crate actix_web;
-extern crate serde_json;
-extern crate serde;
-extern crate uuid;
 extern crate futures;
+extern crate regex;
+extern crate serde;
+extern crate serde_json;
+extern crate uuid;
 
 mod cqlutils;
 mod person;
 mod personweb;
 
-use personweb::{select_all, select_id, add_person};
-use cqlutils::{create_session, CurrentSession};
 use actix_web::{web, App, HttpResponse, HttpServer};
 use actix_web::middleware::Logger;
+use cqlutils::{create_session, CurrentSession};
 use env_logger;
+use personweb::{select_all, select_id, add_person};
+
 
 pub struct AppState {
     pub cql_session: CurrentSession,

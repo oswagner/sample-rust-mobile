@@ -40,3 +40,11 @@ $ cargo build --manifest-path=todo-server/Cargo.toml && cargo run --manifest-pat
 ```
 **Select Team by ID:** `GET localhost:4000/team/select/{id}`
 **Select all Teams:** `GET localhost:4000/team/all`
+
+# TODO
+- [ ] Include Update on team name
+- [ ] Include Update on person name and BLOB
+- [ ] Creates feature:
+  - [ ] Include ID, Responsable ID, Title
+  - [ ] Feature State
+  - [ ] Feature date history

@@ -2,43 +2,25 @@
 #[macro_use] extern crate cdrs_helpers_derive;
 #[macro_use] extern crate serde_derive;
 extern crate actix_web;
-extern crate serde_json;
-extern crate serde;
-extern crate uuid;
 extern crate futures;
+extern crate regex;
+extern crate serde;
+extern crate serde_json;
+extern crate uuid;
 
-mod cql;
+mod cqlutils;
+mod person;
+mod personweb;
 
-use cql::{select_person, select_person_id, insert_person, create_session};
-use actix_web::{web, Result, App, HttpResponse, HttpServer, Error};
+use actix_web::{web, App, HttpResponse, HttpServer};
 use actix_web::middleware::Logger;
+use cqlutils::{create_session, CurrentSession};
 use env_logger;
-use futures::future::{ok, Future};
-use serde::Deserialize;
+use personweb::{select_all, select_id, add_person};
 
-#[derive(Deserialize)]
-struct Info {
-    name: String,
-}
 
-fn select_all() -> Box<dyn Future<Item = HttpResponse, Error = Error>> {
-    let no_compression = create_session();
-    Box::new(ok::<_, Error>(
-        HttpResponse::Ok().content_type("application/json").body(select_person(&no_compression).join("\n"))
-    ))
-}
-
-fn select_id(info: web::Path<(String)>) -> Box<dyn Future<Item = HttpResponse, Error = Error>> {
-    let no_compression = create_session();
-    Box::new(ok::<_, Error>(
-        HttpResponse::Ok().content_type("application/json").body(select_person_id(&no_compression, info.to_string()))
-    ))
-}
-
-fn add_person(info: web::Json<Info>) -> Result<String> {
-    let no_compression = create_session();
-    let id = insert_person(&no_compression, format!("{}",info.name));
-    Ok(id)
+pub struct AppState {
+    pub cql_session: CurrentSession,
 }
 
 #[rustfmt::skip]
@@ -48,6 +30,9 @@ pub fn main() {
 
   HttpServer::new(|| {
         App::new()
+          .data(AppState {
+            cql_session: create_session(),
+          })
           .wrap(Logger::new("IP:%a DATETIME:%t REQUEST:\"%r\" STATUS: %s DURATION:%D \n"))
           .service(
             web::scope("/person")

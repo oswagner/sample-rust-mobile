@@ -107,10 +107,9 @@ mod test_person {
     let session = create_session();
     let retrieved_person_id = insert_person(&session, String::from("Testando"));  
 
-    let persons = select_person(&session);
-    let person = serde_json::from_str::<Person>(persons.last().unwrap()).unwrap();
+    let persons = select_person_id(&session, retrieved_person_id.clone());
+    let person = serde_json::from_str::<Person>(&persons).unwrap();
 
     assert_eq!(person.id.to_string(), retrieved_person_id);
-    assert!(persons.len() >= 3);
   }
 }

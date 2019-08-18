@@ -1,4 +1,4 @@
-CREATE KEYSPACE IF NOT EXISTS todo WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 3};
+CREATE KEYSPACE IF NOT EXISTS todo WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 3} AND DURABLE_WRITES = false;
 
 USE todo;
 
@@ -16,13 +16,14 @@ CREATE TABLE IF NOT EXISTS person (
     image BLOB,
     PRIMARY KEY (id));
 
-CREATE INDEX IF NOT EXISTS title_idx ON todo.feature (title);
-CREATE INDEX IF NOT EXISTS state_idx ON todo.feature (state);
-
-CREATE INDEX IF NOT EXISTS name_idx ON todo.person (person);
-
+CREATE TABLE IF NOT EXISTS team (
+    id UUID,
+    name VARCHAR,
+    PRIMARY KEY (id));
 
 INSERT INTO person (id, person) VALUES(uuid(), 'Wagner');
 INSERT INTO person (id, person) VALUES(uuid(), 'Julia');
+
+INSERT INTO team (id, name) VALUES(uuid(), 'Rust');
 
 INSERT INTO feature (id, title, state) VALUES(uuid(), 'Fazer CQL funcionar', 0);

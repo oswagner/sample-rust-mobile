@@ -10,13 +10,16 @@ extern crate uuid;
 
 mod cqlutils;
 mod person;
+mod team;
 mod personweb;
+mod teamweb;
 
 use actix_web::{web, App, HttpResponse, HttpServer};
 use actix_web::middleware::Logger;
 use cqlutils::{create_session, CurrentSession};
 use env_logger;
 use personweb::{select_all, select_id, add_person};
+use teamweb::{select_all_teams, select_team_by_id, add_team};
 
 
 pub struct AppState {
@@ -39,6 +42,12 @@ pub fn main() {
               .route("/select/{id}", web::get().to(select_id))
               .route("/add", web::post().to(add_person))
               .route("/all", web::get().to_async(select_all))
+              .route("",web::get().to(|| HttpResponse::MethodNotAllowed())))
+          .service(
+            web::scope("/team")
+              .route("/select/{id}", web::get().to(select_team_by_id))
+              .route("/add", web::post().to(add_team))
+              .route("/all", web::get().to_async(select_all_teams))
               .route("",web::get().to(|| HttpResponse::MethodNotAllowed())))
           .service(
              web::scope("/")
